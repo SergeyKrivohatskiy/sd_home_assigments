@@ -3,7 +3,8 @@
  */
 package ru.spbau.skrivohatskiy.shell.commands;
 
-import java.io.PrintStream;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Paths;
 
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.CommandExecutionContext;
@@ -17,10 +18,16 @@ import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.exceptions.CommandExecu
 public class Pwd implements CommandExecutor {
 
     @Override
-    public void execute(PrintStream out, String[] args,
+    public void execute(Writer out, String[] args,
 	    CommandExecutionContext executionCtx)
 	    throws CommandExecutionException {
-	out.println(Paths.get("").toAbsolutePath().toString());
+	try {
+	    out.write(Paths.get("").toAbsolutePath().toString());
+	    out.write(System.lineSeparator());
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 
     @Override

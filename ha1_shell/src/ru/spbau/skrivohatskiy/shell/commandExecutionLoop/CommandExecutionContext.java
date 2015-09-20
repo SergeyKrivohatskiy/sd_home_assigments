@@ -3,7 +3,7 @@
  */
 package ru.spbau.skrivohatskiy.shell.commandExecutionLoop;
 
-import java.io.BufferedReader;
+import java.io.Reader;
 import java.util.Set;
 
 /**
@@ -11,7 +11,7 @@ import java.util.Set;
  *
  */
 public interface CommandExecutionContext {
-    public BufferedReader getInput();
+    public Reader getInput();
 
     public CommandExecutor getCommandExecutor(String name);
 

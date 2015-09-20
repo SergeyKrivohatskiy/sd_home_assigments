@@ -3,7 +3,8 @@
  */
 package ru.spbau.skrivohatskiy.shell.commands;
 
-import java.io.PrintStream;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Set;
 
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.CommandExecutionContext;
@@ -17,27 +18,36 @@ import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.exceptions.CommandExecu
 public class Man implements CommandExecutor {
 
     @Override
-    public void execute(PrintStream out, String[] args,
+    public void execute(Writer out, String[] args,
 	    CommandExecutionContext executionCtx)
 	    throws CommandExecutionException {
-	if (args.length == 0) {
-	    out.println("Available commands:");
-	    Set<String> commandsAvailable = executionCtx
-		    .getCommandExecutorNames();
-	    for (String commandName : commandsAvailable) {
-		out.println(commandName);
+	try {
+	    if (args.length == 0) {
+		out.write("Available commands:");
+		out.write(System.lineSeparator());
+		Set<String> commandsAvailable = executionCtx
+			.getCommandExecutorNames();
+		for (String commandName : commandsAvailable) {
+		    out.write(commandName);
+		    out.write(System.lineSeparator());
+		}
+		return;
 	    }
-	    return;
-	}
 
-	CommandExecutor command = executionCtx.getCommandExecutor(args[0]);
-	if (command == null) {
-	    out.println("Command " + args[0] + " not found");
-	} else {
-	    out.println("Command " + args[0]);
-	    out.println(command.getDescription());
+	    CommandExecutor command = executionCtx.getCommandExecutor(args[0]);
+	    if (command == null) {
+		out.write("Command " + args[0] + " not found");
+		out.write(System.lineSeparator());
+	    } else {
+		out.write("Command " + args[0]);
+		out.write(System.lineSeparator());
+		out.write(command.getDescription());
+		out.write(System.lineSeparator());
+	    }
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
-
     }
 
     @Override

@@ -3,7 +3,7 @@
  */
 package ru.spbau.skrivohatskiy.shell.commandExecutionLoop;
 
-import java.io.PrintStream;
+import java.io.Writer;
 
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.exceptions.CommandExecutionException;
 
@@ -13,7 +13,7 @@ import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.exceptions.CommandExecu
  */
 public interface CommandExecutor {
 
-    public void execute(PrintStream out, String[] args,
+    public void execute(Writer out, String[] args,
 	    CommandExecutionContext executionCtx)
 	    throws CommandExecutionException;
 

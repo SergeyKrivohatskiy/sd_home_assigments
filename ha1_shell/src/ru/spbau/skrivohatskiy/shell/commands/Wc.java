@@ -3,10 +3,12 @@
  */
 package ru.spbau.skrivohatskiy.shell.commands;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.CommandExecutionContext;
@@ -20,7 +22,7 @@ import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.exceptions.CommandExecu
 public class Wc implements CommandExecutor {
 
     @Override
-    public void execute(PrintStream out, String[] args,
+    public void execute(Writer out, String[] args,
 	    CommandExecutionContext executionCtx)
 	    throws CommandExecutionException {
 	try {
@@ -29,14 +31,25 @@ public class Wc implements CommandExecutor {
 	    for (String fileName : args) {
 		List<String> fileLines = Files
 			.readAllLines(Paths.get(fileName));
-		for (String line : fileLines) {
-		    wc += line.trim().split("\\s").length;
-		    lc += 1;
-		}
+		IntSummaryStatistics stats = fileLines.stream()
+			.mapToInt(line -> {
+			    return line.trim().split("\\s").length;
+			}).summaryStatistics();
+		wc += stats.getSum();
+		lc += stats.getCount();
 	    }
-	    out.println(String.format(
-		    "%d files contains %d lines and %d words", args.length, lc,
-		    wc));
+	    if (args.length == 0) {
+		BufferedReader reader = new BufferedReader(
+			executionCtx.getInput());
+		IntSummaryStatistics stats = reader.lines().mapToInt(line -> {
+		    return line.trim().split("\\s").length;
+		}).summaryStatistics();
+		wc += stats.getSum();
+		lc += stats.getCount();
+	    }
+	    out.write(String.format("%d files contains %d lines and %d words",
+		    args.length, lc, wc));
+	    out.write(System.lineSeparator());
 	} catch (IOException e) {
 	    throw new CommandExecutionException("Failed to read file", e);
 	}
