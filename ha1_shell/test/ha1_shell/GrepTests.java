@@ -7,21 +7,32 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.CommandExecutor;
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.exceptions.CommandExecutionException;
 import ru.spbau.skrivohatskiy.shell.commands.CliGrep;
+import ru.spbau.skrivohatskiy.shell.commands.JGrep;
 
 /**
  * @author Sergey Krivohatskiy
  *
  */
+@RunWith(value = Parameterized.class)
 public class GrepTests {
-    private static final CommandExecutor grep = new CliGrep();
+    private final CommandExecutor grep;
     private StringWriter output;
+
+    public GrepTests(CommandExecutor grep) {
+	this.grep = grep;
+    }
 
     @Before
     public void createOutput() {
@@ -188,5 +199,11 @@ public class GrepTests {
     public void invalidFileTest() throws CommandExecutionException {
 	String[] args = { "-a", "1", "-w", "NotExistingFile.txt", "3" };
 	grep.execute(output, args, TestUtils.createExecutionContext(""));
+    }
+
+    @Parameters
+    public static Collection<Object[]> data() {
+	Object[][] data = new Object[][] { { new CliGrep() }, { new JGrep() } };
+	return Arrays.asList(data);
     }
 }
