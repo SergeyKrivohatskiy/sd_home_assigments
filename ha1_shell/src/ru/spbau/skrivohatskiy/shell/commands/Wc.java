@@ -33,7 +33,7 @@ public class Wc implements CommandExecutor {
 			.readAllLines(Paths.get(fileName));
 		IntSummaryStatistics stats = fileLines.stream()
 			.mapToInt(line -> {
-			    return line.trim().split("\\s").length;
+			    return line.trim().split("\\s+").length;
 			}).summaryStatistics();
 		wc += stats.getSum();
 		lc += stats.getCount();

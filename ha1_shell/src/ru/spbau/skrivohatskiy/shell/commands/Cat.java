@@ -27,11 +27,14 @@ public class Cat implements CommandExecutor {
 	    throw new CommandExecutionException("Need at least one argument");
 	}
 	try {
-	    String fileName = args[0];
-	    List<String> fileLines = Files.readAllLines(Paths.get(fileName));
-	    for (String line : fileLines) {
-		out.write(line);
-		out.write(System.lineSeparator());
+	    for (int idx = 0; idx < args.length; idx += 1) {
+		String fileName = args[0];
+		List<String> fileLines = Files
+			.readAllLines(Paths.get(fileName));
+		for (String line : fileLines) {
+		    out.write(line);
+		    out.write(System.lineSeparator());
+		}
 	    }
 	} catch (IOException e) {
 	    throw new CommandExecutionException("Failed to read file", e);

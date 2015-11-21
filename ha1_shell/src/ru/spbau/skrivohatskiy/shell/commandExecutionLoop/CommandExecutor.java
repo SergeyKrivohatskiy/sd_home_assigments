@@ -18,4 +18,5 @@ public interface CommandExecutor {
 	    throws CommandExecutionException;
 
     public String getDescription();
+
 }
