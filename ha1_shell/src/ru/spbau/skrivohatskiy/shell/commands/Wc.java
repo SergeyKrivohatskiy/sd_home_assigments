@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.IntSummaryStatistics;
 import java.util.List;
 
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.CommandExecutionContext;
@@ -28,27 +27,29 @@ public class Wc implements CommandExecutor {
 	try {
 	    int wc = 0;
 	    int lc = 0;
+	    int bc = 0;
 	    for (String fileName : args) {
 		List<String> fileLines = Files
 			.readAllLines(Paths.get(fileName));
-		IntSummaryStatistics stats = fileLines.stream()
-			.mapToInt(line -> {
-			    return line.trim().split("\\s+").length;
-			}).summaryStatistics();
-		wc += stats.getSum();
-		lc += stats.getCount();
+		for (String line : fileLines) {
+		    bc += (line.getBytes().length);
+		    wc += line.trim().split("\\s+").length;
+		    lc += 1;
+		}
 	    }
 	    if (args.length == 0) {
 		BufferedReader reader = new BufferedReader(
 			executionCtx.getInput());
-		IntSummaryStatistics stats = reader.lines().mapToInt(line -> {
-		    return line.trim().split("\\s").length;
-		}).summaryStatistics();
-		wc += stats.getSum();
-		lc += stats.getCount();
+		String line;
+		while ((line = reader.readLine()) != null) {
+		    bc += (line.getBytes().length);
+		    wc += line.trim().split("\\s+").length;
+		    lc += 1;
+		}
 	    }
-	    out.write(String.format("%d files contains %d lines and %d words",
-		    args.length, lc, wc));
+	    out.write(String.format(
+		    "%d files contains %d lines, %d words and %d bytes",
+		    args.length, lc, wc, bc));
 	    out.write(System.lineSeparator());
 	} catch (IOException e) {
 	    throw new CommandExecutionException("Failed to read file", e);
