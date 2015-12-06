@@ -113,7 +113,8 @@ public class CommandExecutionLoop {
 		out.write(">>>");
 		out.flush();
 		String commandsStr = in.readLine();
-		if (commandsStr.equalsIgnoreCase(exitCommand)) {
+		if (commandsStr == null
+			|| commandsStr.equalsIgnoreCase(exitCommand)) {
 		    break;
 		}
 		CommandWithArgs[] commands = parseCommands(commandsStr);
