@@ -23,9 +23,6 @@ public class Cat implements CommandExecutor {
     public void execute(Writer out, String[] args,
 	    CommandExecutionContext executionCtx)
 	    throws CommandExecutionException {
-	if (args.length < 1) {
-	    throw new CommandExecutionException("Need at least one argument");
-	}
 	try {
 	    for (int idx = 0; idx < args.length; idx += 1) {
 		String fileName = args[idx];
@@ -35,6 +32,14 @@ public class Cat implements CommandExecutor {
 		    out.write(line);
 		    out.write(System.lineSeparator());
 		}
+	    }
+	    if (args.length != 0) {
+		return;
+	    }
+	    int data = executionCtx.getInput().read();
+	    while (data != -1) {
+		out.write(data);
+		data = executionCtx.getInput().read();
 	    }
 	} catch (IOException e) {
 	    throw new CommandExecutionException("Failed to read file", e);
