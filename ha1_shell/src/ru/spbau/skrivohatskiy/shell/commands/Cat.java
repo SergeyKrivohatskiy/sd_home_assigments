@@ -28,7 +28,7 @@ public class Cat implements CommandExecutor {
 	}
 	try {
 	    for (int idx = 0; idx < args.length; idx += 1) {
-		String fileName = args[0];
+		String fileName = args[idx];
 		List<String> fileLines = Files
 			.readAllLines(Paths.get(fileName));
 		for (String line : fileLines) {
