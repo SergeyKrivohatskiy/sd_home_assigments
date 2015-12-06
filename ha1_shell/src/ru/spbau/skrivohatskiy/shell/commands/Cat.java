@@ -4,6 +4,7 @@
 package ru.spbau.skrivohatskiy.shell.commands;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -36,10 +37,12 @@ public class Cat implements CommandExecutor {
 	    if (args.length != 0) {
 		return;
 	    }
-	    int data = executionCtx.getInput().read();
+	    Reader stdin = executionCtx.getInput();
+	    int data = stdin.read();
 	    while (data != -1) {
 		out.write(data);
-		data = executionCtx.getInput().read();
+		data = stdin.read();
+		out.flush();
 	    }
 	} catch (IOException e) {
 	    throw new CommandExecutionException("Failed to read file", e);

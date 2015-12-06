@@ -52,9 +52,10 @@ public class CatTests {
 	assertEquals(testContent + testContent, output.toString());
     }
 
-    @Test(expected = CommandExecutionException.class)
+    @Test
     public void noArgsCatTest() throws CommandExecutionException {
 	String[] args = {};
-	cat.execute(output, args, TestUtils.createExecutionContext(""));
+	cat.execute(output, args, TestUtils.createExecutionContext("2124123"));
+	assertEquals("2124123", output.toString());
     }
 }

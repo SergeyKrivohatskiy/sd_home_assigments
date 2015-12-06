@@ -120,7 +120,7 @@ public class GrepTests {
     }
 
     @Test
-    public void wordFoundTest1() throws CommandExecutionException {
+    public void wordInEndShouldBeFoundTest() throws CommandExecutionException {
 	String[] args = { "-w", "toFind" };
 	grep.execute(output, args,
 		TestUtils.createExecutionContext("in string toFind"));
@@ -129,7 +129,8 @@ public class GrepTests {
     }
 
     @Test
-    public void wordFoundTest2() throws CommandExecutionException {
+    public void wordInMiddleShouldBeFoundTest()
+	    throws CommandExecutionException {
 	String[] args = { "-w", "toFind" };
 	grep.execute(output, args,
 		TestUtils.createExecutionContext("in toFind string"));
