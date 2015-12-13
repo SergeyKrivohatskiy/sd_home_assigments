@@ -33,15 +33,16 @@ public class Cat implements CommandExecutor {
 		    out.write(line);
 		    out.write(System.lineSeparator());
 		}
+		out.flush();
 	    }
 	    if (args.length != 0) {
 		return;
 	    }
 	    Reader stdin = executionCtx.getInput();
-	    int data = stdin.read();
-	    while (data != -1) {
-		out.write(data);
-		data = stdin.read();
+	    int n;
+	    char[] buffer = new char[1024];
+	    while ((n = stdin.read(buffer)) > -1) {
+		out.write(buffer, 0, n);
 		out.flush();
 	    }
 	} catch (IOException e) {

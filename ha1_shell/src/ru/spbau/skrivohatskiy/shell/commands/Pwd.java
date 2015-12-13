@@ -25,8 +25,7 @@ public class Pwd implements CommandExecutor {
 	    out.write(Paths.get("").toAbsolutePath().toString());
 	    out.write(System.lineSeparator());
 	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    throw new CommandExecutionException("Failed to write output", e);
 	}
     }
 

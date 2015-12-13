@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.CommandExecutionContext;
 import ru.spbau.skrivohatskiy.shell.commandExecutionLoop.CommandExecutor;
@@ -25,39 +26,43 @@ public class Wc implements CommandExecutor {
 	    CommandExecutionContext executionCtx)
 	    throws CommandExecutionException {
 	try {
-	    int wc = 0;
-	    int lc = 0;
-	    int bc = 0;
+	    Stats stats = new Stats();
 	    for (String fileName : args) {
 		List<String> fileLines = Files
 			.readAllLines(Paths.get(fileName));
-		for (String line : fileLines) {
-		    bc += (line.getBytes().length);
-		    wc += line.trim().split("\\s+").length;
-		    lc += 1;
-		}
+		cllectStats(fileLines, stats);
 	    }
 	    if (args.length == 0) {
-		BufferedReader reader = new BufferedReader(
-			executionCtx.getInput());
-		String line;
-		while ((line = reader.readLine()) != null) {
-		    bc += (line.getBytes().length);
-		    wc += line.trim().split("\\s+").length;
-		    lc += 1;
-		}
+		List<String> inputLines = new BufferedReader(
+			executionCtx.getInput()).lines().collect(
+			Collectors.toList());
+		cllectStats(inputLines, stats);
 	    }
 	    out.write(String.format(
 		    "%d files contains %d lines, %d words and %d bytes",
-		    args.length, lc, wc, bc));
+		    args.length, stats.lc, stats.wc, stats.bc));
 	    out.write(System.lineSeparator());
 	} catch (IOException e) {
 	    throw new CommandExecutionException("Failed to read file", e);
 	}
     }
 
+    private void cllectStats(List<String> lines, Stats stats) {
+	for (String line : lines) {
+	    stats.bc += line.getBytes().length;
+	    stats.wc += line.trim().split("\\s+").length;
+	    stats.lc += 1;
+	}
+    }
+
     @Override
     public String getDescription() {
 	return "prints lines and chars count for files given as arguments";
+    }
+
+    private static class Stats {
+	public int bc = 0;
+	public int wc = 0;
+	public int lc = 0;
     }
 }

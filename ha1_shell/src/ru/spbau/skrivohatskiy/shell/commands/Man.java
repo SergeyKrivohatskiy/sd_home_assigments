@@ -45,8 +45,7 @@ public class Man implements CommandExecutor {
 		out.write(System.lineSeparator());
 	    }
 	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    throw new CommandExecutionException("Failed to write output", e);
 	}
     }
 
